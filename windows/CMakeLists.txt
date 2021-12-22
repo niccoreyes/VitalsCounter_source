@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(medical_calculator LANGUAGES CXX)
+project(medical_timer LANGUAGES CXX)
 
-set(BINARY_NAME "medical_calculator")
+set(BINARY_NAME "medical_timer")
 
 cmake_policy(SET CMP0063 NEW)
 

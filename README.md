@@ -1,4 +1,4 @@
-# medical_calculator
+# medical_timer
 
 A new Flutter project.
 
