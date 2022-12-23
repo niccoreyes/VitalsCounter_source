@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Beats Counter app"),
+        title: const Text("Vitals - by Thomas Reyes"),
       ),
       body: Center(
         child: Column(
