@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -31,9 +31,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int _bpm = 0;
   int _ticks = 0;
   int _totalMs = 0;
-  int _totalSeconds = 0;
   int _countdown = 60;
-  final int _interval = 100; //set to more than 100ms to compensate for mobile
+  static const int _interval =
+      200; //set to more than 100ms to compensate for mobile
   bool _timerisRunning = false;
 
   //For animation
@@ -44,22 +44,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Timer _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {});
+  Timer _timer =
+      Timer.periodic(const Duration(milliseconds: _interval), (timer) {});
   void _startTimer() {
     HapticFeedback.vibrate();
     _updateState();
     if (_counter != 0) {
       _ticks++;
       _bpm = (_ticks.toDouble() / _totalMs.toDouble() * 60000).round(); //1000
-      _totalSeconds = (_totalMs / 1000).round();
     }
     _counter = 0;
     if (_timerisRunning == false) {
       _timerisRunning = true;
-      _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      _timer = Timer.periodic(const Duration(milliseconds: _interval), (timer) {
         setState(() {
-          _counter += 100;
-          _totalMs += 100;
+          _counter += _interval;
+          _totalMs += _interval;
           if (_countdown > 0) {
             _countdown = (60 - _totalMs.toDouble() / 1000).toInt();
           }
@@ -78,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _ticks = 0;
       _bpm = 0;
       _totalMs = 0;
-      _totalSeconds = 0;
       _countdown = 60;
     });
   }
@@ -116,23 +115,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      constraints: BoxConstraints.expand(),
+                      constraints: const BoxConstraints.expand(),
                       decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromARGB(71, 235, 243, 252)
+                              color: const Color.fromARGB(71, 235, 243, 252)
                                   .withOpacity(.2),
                               blurRadius: 32,
-                              offset: Offset(40, 20),
+                              offset: const Offset(40, 20),
                             ),
                             BoxShadow(
-                              color: Color(0xFFFFFFFF).withOpacity(1),
+                              color: const Color(0xFFFFFFFF).withOpacity(1),
                               blurRadius: 32,
-                              offset: Offset(-20, -10),
+                              offset: const Offset(-20, -10),
                             )
                           ],
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                               colors: [
                                 Color.fromARGB(255, 181, 220, 255),
                                 Color.fromARGB(255, 207, 230, 250)
@@ -143,22 +142,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: Container(
-                        constraints: BoxConstraints.expand(),
+                        constraints: const BoxConstraints.expand(),
                         decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Color(0xFF3F6080).withOpacity(.2),
+                                color: const Color(0xFF3F6080).withOpacity(.2),
                                 blurRadius: 32,
-                                offset: Offset(40, 20),
+                                offset: const Offset(40, 20),
                               ),
                               BoxShadow(
-                                color: Color(0xFFFFFFFF).withOpacity(1),
+                                color: const Color(0xFFFFFFFF).withOpacity(1),
                                 blurRadius: 32,
-                                offset: Offset(-20, -10),
+                                offset: const Offset(-20, -10),
                               )
                             ],
                             shape: BoxShape.circle,
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                                 colors: [
                                   Color.fromARGB(255, 78, 170, 250),
                                   Color.fromARGB(255, 38, 125, 206)
@@ -170,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Transform.rotate(
                       angle: 2 * pi / 60 * -_countdown,
                       child: Container(
-                        constraints: BoxConstraints.expand(),
+                        constraints: const BoxConstraints.expand(),
                         child: CustomPaint(
                           painter: ClockPainter(),
                         ),
@@ -218,8 +217,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Text ColoredText(text_variable, fsize, {dynamic color = Colors.green}) {
-    return Text(text_variable,
+  Text ColoredText(textVariable, fsize, {dynamic color = Colors.green}) {
+    return Text(textVariable,
         textAlign: TextAlign.center,
         style: TextStyle(
             color: color, fontWeight: FontWeight.bold, fontSize: fsize));
@@ -242,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   borderRadius:
                       BorderRadius.circular((big) ? _height : 200.0))),
           onPressed: () => onPressTHIS(),
-          label: Text(_text, style: TextStyle(fontSize: 20)),
+          label: Text(_text, style: const TextStyle(fontSize: 20)),
         ));
   }
 }
@@ -256,10 +255,10 @@ class ClockPainter extends CustomPainter {
     double radius = min(centerY, centerX);
 
     final Paint secLinePaint = Paint()
-      ..color = Color.fromARGB(255, 255, 248, 248)
+      ..color = const Color.fromARGB(255, 255, 248, 248)
       ..strokeWidth = 4;
     final Paint bluePaint = Paint()
-      ..color = Color.fromARGB(255, 243, 33, 33)
+      ..color = const Color.fromARGB(255, 243, 33, 33)
       ..strokeWidth = 10;
     //canvas.drawRect(Rect.fromLTWH(centerX, centerY, 100, 100), bluePaint);
     canvas.drawLine(
