@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _totalMs = 0;
   int _countdown = 60;
   static const int _interval =
-      kIsWeb ? 200 : 50; //set to more than 100ms to compensate for mobile
+      kIsWeb ? 200 : 100; //set to more than 100ms to compensate for mobile
   bool _timerisRunning = false;
   int fixedTime = 0;
   int absoluteTime = 0;
