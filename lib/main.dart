@@ -35,6 +35,11 @@ class _MyHomePageState extends State<MyHomePage> {
   static const int _interval =
       200; //set to more than 100ms to compensate for mobile
   bool _timerisRunning = false;
+  int fixedTime = 0;
+  int absoluteTime = 0;
+  bool _isShowDebug = false;
+
+  bool _fromPause = false;
 
   //For animation
   double circleSize = 200.00;
@@ -47,19 +52,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer _timer =
       Timer.periodic(const Duration(milliseconds: _interval), (timer) {});
   void _startTimer() {
-    HapticFeedback.vibrate();
+    HapticFeedback.lightImpact();
     _updateState();
     if (_counter != 0) {
       _ticks++;
-      _bpm = (_ticks.toDouble() / _totalMs.toDouble() * 60000).round(); //1000
+      _bpm =
+          (_ticks.toDouble() / absoluteTime.toDouble() * 60000).round(); //1000
     }
     _counter = 0;
     if (_timerisRunning == false) {
       _timerisRunning = true;
+      fixedTime = DateTime.now().millisecondsSinceEpoch;
       _timer = Timer.periodic(const Duration(milliseconds: _interval), (timer) {
         setState(() {
           _counter += _interval;
           _totalMs += _interval;
+          if (_fromPause) {
+            fixedTime = DateTime.now().millisecondsSinceEpoch - absoluteTime;
+            _fromPause = false;
+          } else {
+            absoluteTime = DateTime.now().millisecondsSinceEpoch - fixedTime;
+          }
           if (_countdown > 0) {
             _countdown = (60 - _totalMs.toDouble() / 1000).toInt();
           }
@@ -79,6 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _bpm = 0;
       _totalMs = 0;
       _countdown = 60;
+      fixedTime = 0;
+      absoluteTime = 0;
     });
   }
 
@@ -86,6 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _timer.cancel();
       _timerisRunning = false;
+      absoluteTime = DateTime.now().millisecondsSinceEpoch - fixedTime;
+      _fromPause = true;
     });
   }
 
@@ -99,16 +116,48 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ColoredText("$_bpm\nBPM", 50.0),
-            //ColoredText("$_ticks ticks", 15.0),
-            //ColoredText("$_totalSeconds total seconds", 15.0),
-            ColoredText("$_countdown seconds remaining", 20.0),
-            //ColoredText("$_totalMs total millis", 15.0),
+            Visibility(
+                visible: _isShowDebug,
+                child:
+                    ColoredText("Debug ongoing", 15.0, color: Colors.orange)),
+            InkWell(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Icon(Icons.question_mark),
+                    ],
+                  ),
+                  ColoredText("$_bpm\nBPM", 50.0),
+                  //ColoredText("$_totalSeconds total seconds", 15.0),
+                  ColoredText("$_countdown seconds remaining", 20.0),
+                ],
+              ),
+              onTap: () {
+                _isShowDebug = !_isShowDebug;
+                setState(() {});
+              },
+            ),
+            Visibility(
+              visible: _isShowDebug,
+              child: Column(
+                children: [
+                  ColoredText("$_ticks total ticks divided by in (ms):", 15.0,
+                      color: Colors.orange),
+                  ColoredText("$_totalMs total millis vs", 15.0,
+                      color: Colors.orange),
+                  ColoredText("$absoluteTime absolute millis", 15.0,
+                      color: Colors.orange),
+                ],
+              ),
+            ),
+
             // ColoredText("$_counter ms", 15.0,
             //     color: Color.fromARGB(255, 85, 85, 85)),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
+              child: SizedBox(
                 height: 250,
                 width: 250,
                 child: Stack(
@@ -251,8 +300,8 @@ class ClockPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double centerX = size.width / 2;
     double centerY = size.height / 2;
-    Offset center = Offset(centerX, centerY);
-    double radius = min(centerY, centerX);
+    //Offset center = Offset(centerX, centerY);
+    //double radius = min(centerY, centerX);
 
     final Paint secLinePaint = Paint()
       ..color = const Color.fromARGB(255, 255, 248, 248)
