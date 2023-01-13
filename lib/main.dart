@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _totalMs = 0;
   int _countdown = 60;
   static const int _interval =
-      200; //set to more than 100ms to compensate for mobile
+      kIsWeb ? 200 : 50; //set to more than 100ms to compensate for mobile
   bool _timerisRunning = false;
   int fixedTime = 0;
   int absoluteTime = 0;
@@ -52,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer _timer =
       Timer.periodic(const Duration(milliseconds: _interval), (timer) {});
   void _startTimer() {
-    HapticFeedback.lightImpact();
+    HapticFeedback.mediumImpact();
     _updateState();
     if (_counter != 0) {
       _ticks++;
@@ -74,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
             absoluteTime = DateTime.now().millisecondsSinceEpoch - fixedTime;
           }
           if (_countdown > 0) {
-            _countdown = (60 - _totalMs.toDouble() / 1000).toInt();
+            _countdown = (60 - absoluteTime.toDouble() / 1000).toInt();
           }
         });
       });
@@ -101,8 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _timer.cancel();
       _timerisRunning = false;
-      absoluteTime = DateTime.now().millisecondsSinceEpoch - fixedTime;
-      _fromPause = true;
+      if (!_fromPause) {
+        absoluteTime = DateTime.now().millisecondsSinceEpoch - fixedTime;
+        _fromPause = true;
+      }
     });
   }
 
@@ -111,6 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Vitals - by Thomas Reyes"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _isShowDebug = !_isShowDebug;
+                setState(() {});
+              },
+              icon: const Icon(Icons.question_mark))
+        ],
       ),
       body: Center(
         child: Column(
@@ -118,17 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Visibility(
                 visible: _isShowDebug,
-                child:
-                    ColoredText("Debug ongoing", 15.0, color: Colors.orange)),
+                child: ColoredText(
+                    "Debug ongoing, updates for smaller screens soon", 15.0,
+                    color: Colors.orange)),
             InkWell(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Icon(Icons.question_mark),
-                    ],
-                  ),
                   ColoredText("$_bpm\nBPM", 50.0),
                   //ColoredText("$_totalSeconds total seconds", 15.0),
                   ColoredText("$_countdown seconds remaining", 20.0),
