@@ -2,7 +2,7 @@
     package="com.example.medical_timer">
     <uses-permission android:name="android.permission.VIBRATE"/>
    <application
-        android:label="medical_timer"
+        android:label="Vitals Counter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
