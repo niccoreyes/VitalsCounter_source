@@ -3,24 +3,26 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
+  "assets/AssetManifest.bin": "a3d922a0b0bb96200631d1d9f758ce7d",
+"assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"assets/fonts/MaterialIcons-Regular.otf": "e2119531810cd7ed90f3a7d17352207a",
-"assets/NOTICES": "1b67da0d5098db194c35e5b27765fbc9",
+"assets/fonts/MaterialIcons-Regular.otf": "71ac804a223e1f1b692059fecffd3cf3",
+"assets/NOTICES": "cca9f28652b1a16fdb5f995db07ecfbe",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "57d849d738900cfd590e9adc7e208250",
-"canvaskit/canvaskit.js": "97937cb4c2c2073c968525a3e08c86a3",
-"canvaskit/canvaskit.wasm": "3de12d898ec208a5f31362cc00f09b9e",
+"assets/shaders/ink_sparkle.frag": "92666cc97576adbea2e2d3061a953137",
+"canvaskit/canvaskit.js": "971260b2fcb9a1c3b5fd69fb698cf9ba",
+"canvaskit/canvaskit.wasm": "48f080c2ac49c3cb46d3bede112db925",
 "canvaskit/profiling/canvaskit.js": "c21852696bc1cc82e8894d851c01921a",
 "canvaskit/profiling/canvaskit.wasm": "371bc4e204443b0d5e774d64a046eb99",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"flutter.js": "1cfe996e845b3a8a33f57607e8b09ee4",
+"flutter.js": "a85fcf6324d3c4d3ae3be1ae4931e9c5",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "2e9100c1f401a5ebc0396d02dd8a5fe5",
-"/": "2e9100c1f401a5ebc0396d02dd8a5fe5",
-"main.dart.js": "8a508273897e725922d41190bfb9133d",
+"index.html": "ddf054d315b831b1d0d6492fb8129802",
+"/": "ddf054d315b831b1d0d6492fb8129802",
+"main.dart.js": "8950971ef2477b4e6c516e7908fd6cc3",
 "manifest.json": "fff52e010ed8cf0950f8808ed5b1b60a",
 "version.json": "c66fffab4eb76a765a44f192005ee879"
 };
@@ -64,6 +66,8 @@ self.addEventListener("activate", function(event) {
         await caches.delete(TEMP);
         // Save the manifest to make future upgrades efficient.
         await manifestCache.put('manifest', new Response(JSON.stringify(RESOURCES)));
+        // Claim client to enable caching on first launch
+        self.clients.claim();
         return;
       }
       var oldManifest = await manifest.json();
@@ -89,6 +93,8 @@ self.addEventListener("activate", function(event) {
       await caches.delete(TEMP);
       // Save the manifest to make future upgrades efficient.
       await manifestCache.put('manifest', new Response(JSON.stringify(RESOURCES)));
+      // Claim client to enable caching on first launch
+      self.clients.claim();
       return;
     } catch (err) {
       // On an unhandled exception the state of the cache cannot be guaranteed.
