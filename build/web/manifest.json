@@ -1,5 +1,5 @@
 {
-    "name": "medical_timer",
+    "name": "Vitals Counter",
     "short_name": "medical_timer",
     "start_url": ".",
     "display": "standalone",
