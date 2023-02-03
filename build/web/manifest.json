@@ -1,6 +1,6 @@
 {
     "name": "Vitals Counter",
-    "short_name": "medical_timer",
+    "short_name": "vitals",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
