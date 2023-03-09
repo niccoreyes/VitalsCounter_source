@@ -53,7 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer _timer =
       Timer.periodic(const Duration(milliseconds: _interval), (timer) {});
   void _startTimer() {
-    HapticFeedback.mediumImpact();
+    if (_bpm < 150) {
+      HapticFeedback.vibrate();
+      HapticFeedback.heavyImpact();
+    }
     _updateState();
     if (_counter != 0) {
       _ticks++;

@@ -1,4 +1,4 @@
-package com.example.medical_timer
+package com.example.medical_calculator
 
 import io.flutter.embedding.android.FlutterActivity
 

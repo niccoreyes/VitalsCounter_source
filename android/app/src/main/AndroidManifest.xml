@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.medical_timer">
+    package="com.example.medical_calculator">
     <uses-permission android:name="android.permission.VIBRATE"/>
-   <application
+    <application
         android:label="Vitals Counter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
